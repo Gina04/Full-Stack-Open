@@ -89,20 +89,6 @@ const Total5 = ({ courses }) => {
   );
 };
 
-
-
-
-
-const Button = (props) => {
-  return(
-    <button onClick={props.onClick}>
-     {props.text}
-    </button>
-
-  )
-}
-
-
 const App = () => {
   /* 
     Paso 3: Usar objetos simples para representar las partes del curso.
@@ -132,7 +118,6 @@ const App = () => {
     ],
   };
 
-
   return (
     <div>
       {/* Paso 5: Usar los componentes Header5, Content5 y Total5 con el objeto `courses`. */}
@@ -140,9 +125,6 @@ const App = () => {
       <Header5 courses={courses} />
       <Content5 courses={courses} />
       <Total5 courses={courses} />
-
-
-        
     </div>
   );
 };
