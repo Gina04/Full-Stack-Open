@@ -8,6 +8,8 @@ const Button = ({ onClick, text }) => {
     backgroundColor: '#ffffff',  
     cursor: 'pointer',          
   }}>{text}</button>;
+
+  
 };
 
 function App() {
