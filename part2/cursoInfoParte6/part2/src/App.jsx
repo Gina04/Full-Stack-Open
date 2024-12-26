@@ -25,9 +25,9 @@ const Content = ({ parts }) => {
   );
 };
 
-/*const Total = ({ courses }) => {
+const Total = ({ course }) => {
   // Refactorización: El cálculo del total usa directamente `courses.parts`.
-  const totalExercises = courses.parts.reduce(
+  const totalExercises = course.parts.reduce(
     (sum, part) => sum + part.exercises,
     0
   );
@@ -36,13 +36,14 @@ const Content = ({ parts }) => {
       <p>Total Exercises: {totalExercises}</p>
     </div>
   );
-};*/
+};
 
 const Course = ({ course }) => {
   return (
     <>
       <Header name={course.name} />
       <Content parts={course.parts} />
+      <Total course={course}/>
     </>
   );
 };
