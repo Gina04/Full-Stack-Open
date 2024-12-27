@@ -13,6 +13,12 @@ function App() {
 
   const addPhoneBook = (event)=>{
     event.preventDefault()
+     // Verificar si el nombre ya existe
+    const nameExist = persons.some (person => person.name === newName);
+    if(nameExist){
+      alert(`${newName} is already added to phonebook`);
+      return;//Detener la ejecucion si ya existe 
+    }
     const nameBookObjetc ={
       name: newName, 
       id: persons.length +1,
@@ -32,7 +38,13 @@ const Name = (props) =>{
   return(
     <p>{props.name}</p>
   )
-}  
+} 
+const checkName = (event)=>{
+   return !persons.name.includes(event.target.value)
+   ?alert()
+   : showAll()
+
+}
   return (
     <div>
       <h2>Phonebook</h2>
