@@ -1,10 +1,12 @@
 
-const Person = (props) => {
+const Person = ({person, deleteTheBookPhone}) => {
     return (
       <>
         <p>
-          {props.name} {props.number}
+          {person.name} {person.number}
         </p>
+
+        <button onClick={deleteTheBookPhone}>Delete</button>
       </>
     );
   };

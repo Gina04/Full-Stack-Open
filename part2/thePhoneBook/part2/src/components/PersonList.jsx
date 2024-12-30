@@ -1,13 +1,18 @@
 import Person from './Person'
-const PersonList = ({persons})=>{
+const PersonList = ({persons,handleDelete })=>{
+
     return(
         <>
           <ul>
             {persons.map(person =>
-              <Person key={person.name} name={person.name} number={person.number}/>
+              <Person 
+                key={person.name} 
+                person={person}
+                deleteTheBookPhone={() =>handleDelete(person.id)}/>
             )
 
             }
+
           </ul>
   
      </>

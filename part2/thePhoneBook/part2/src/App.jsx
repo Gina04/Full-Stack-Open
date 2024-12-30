@@ -55,6 +55,19 @@ function App() {
   const handleFilterChange = (event) => {
     setShowAll(event.target.value);
   };
+
+  const handleDelete= id =>{
+    const person = persons.find(p=> p.id === id);
+
+    if(window.confirm(`Do you really want to delete ${person.name}?`)){
+      noteService
+        .remove(id)
+        .then(()=>{
+          setPersons(persons.filter(p => p.id !== id))
+        })
+
+    }
+  }
   // Filtrar las personas basadas en el texto ingresado en el filtro
   const nameToShow = showAll
     ? persons.filter((person) =>
@@ -76,7 +89,7 @@ function App() {
         onAddPhoneBook={addPhoneBook}
       />
       <h3>Numbers</h3>
-      <PersonList persons={nameToShow} />
+      <PersonList persons={nameToShow} handleDelete={handleDelete} />
     </div>
   );
 }
