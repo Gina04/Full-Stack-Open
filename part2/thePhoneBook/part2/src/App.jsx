@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import PersonList from "./components/PersonList";
 import PersonForm from "./components/PersonForm";
 import FilterNamePerson from "./components/FilterNamePerson";
-import axios from 'axios'
+import noteService from "./services/phones";
 
 function App() {
   const [persons, setPersons] = useState([]);
@@ -10,17 +10,16 @@ function App() {
   const [newPhone, setNewPhone] = useState("");
   const [showAll, setShowAll] = useState("");
 
-  useEffect(()=>{
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response =>{
-        console.log('promise fulfilled')
-        setPersons(response.data)
+  useEffect(() => {
+    noteService
+      .getAll()
+      .then((initialPersons) => {
+        setPersons(initialPersons);
       })
-   },[])
-   console.log('render', persons.length, 'notes')
-
+      .catch((error) => {
+        console.error("Error fetching notes:", error);
+      });
+  }, []);
 
   const addPhoneBook = (event) => {
     event.preventDefault();
@@ -33,12 +32,15 @@ function App() {
     const nameBookObjetc = {
       name: newName,
       number: newPhone,
-      id: persons.length + 1,
     };
 
-    setPersons(persons.concat(nameBookObjetc));
-    setNewName("");
-    setNewPhone("");
+    noteService
+    .create(nameBookObjetc)
+    .then((returnedPerson) => {
+      setPersons(persons.concat(returnedPerson)); // Añadimos la nueva persona al estado.
+      setNewName(""); //limpiamos el input
+      setNewPhone("");
+    });
   };
   const handleNameChange = (event) => {
     console.log(event.target.value);
