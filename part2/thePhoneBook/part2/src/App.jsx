@@ -24,19 +24,32 @@ function App() {
   const addPhoneBook = (event) => {
     event.preventDefault();
     // Verificar si el nombre ya existe
-    const nameExist = persons.some((person) => person.name === newName);
-    if (nameExist) {
-      alert(`${newName} is already added to phonebook`);
-      return; //Detener la ejecucion si ya existe
-    }
+    const nameExist = persons.find((person) => person.name === newName);
+
     const nameBookObjetc = {
       name: newName,
       number: newPhone,
     };
 
-    noteService
-    .create(nameBookObjetc)
-    .then((returnedPerson) => {
+    if (nameExist) {
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        noteService.update(nameExist.id, nameBookObjetc).then((updatePhone) => {
+          setNewPhone(
+            persons.map((p) => (p.id !== nameExist.id ? p : updatePhone))
+          ); //Actualizamos el estado de los Phone of the person
+          setNewName("");
+          setNewPhone("");
+        });
+      }
+      return; //Detener la ejecucion si ya existe
+    }
+
+    // Si no existe, crea uno nuevo
+    noteService.create(nameBookObjetc).then((returnedPerson) => {
       setPersons(persons.concat(returnedPerson)); // Añadimos la nueva persona al estado.
       setNewName(""); //limpiamos el input
       setNewPhone("");
@@ -56,18 +69,15 @@ function App() {
     setShowAll(event.target.value);
   };
 
-  const handleDelete= id =>{
-    const person = persons.find(p=> p.id === id);
+  const handleDelete = (id) => {
+    const person = persons.find((p) => p.id === id);
 
-    if(window.confirm(`Do you really want to delete ${person.name}?`)){
-      noteService
-        .remove(id)
-        .then(()=>{
-          setPersons(persons.filter(p => p.id !== id))
-        })
-
+    if (window.confirm(`Do you really want to delete ${person.name}?`)) {
+      noteService.remove(id).then(() => {
+        setPersons(persons.filter((p) => p.id !== id));
+      });
     }
-  }
+  };
   // Filtrar las personas basadas en el texto ingresado en el filtro
   const nameToShow = showAll
     ? persons.filter((person) =>
