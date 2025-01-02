@@ -3,12 +3,23 @@ import PersonList from "./components/PersonList";
 import PersonForm from "./components/PersonForm";
 import FilterNamePerson from "./components/FilterNamePerson";
 import noteService from "./services/phones";
+import Notification from "./components/Notification";
 
 function App() {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [showAll, setShowAll] = useState("");
+  const [notification, setNotification] = useState(
+    "Add a person the phone book..."
+  );
+
+  const showNotification = (message, type = "success") => {
+    setNotification({ message, type });
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  };
 
   useEffect(() => {
     noteService
@@ -43,17 +54,30 @@ function App() {
           ); //Actualizamos el estado de los Phone of the person
           setNewName("");
           setNewPhone("");
+          showNotification(`Added '${newName}'`, "success").catch((error) => {
+            showNotification(`Failed to added ${newName}`, "error");
+          });
         });
       }
       return; //Detener la ejecucion si ya existe
     }
 
     // Si no existe, crea uno nuevo
-    noteService.create(nameBookObjetc).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson)); // Añadimos la nueva persona al estado.
-      setNewName(""); //limpiamos el input
-      setNewPhone("");
-    });
+    noteService
+      .create(nameBookObjetc)
+      .then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson)); // Añadimos la nueva persona al estado.
+        setNewName(""); //limpiamos el input
+        setNewPhone("");
+        showNotification(`Added ${newName}`, "success");
+      })
+      .catch((error) => {
+        showNotification(`Failed to add ${newName}`, "error");
+      });
+
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
   };
   const handleNameChange = (event) => {
     console.log(event.target.value);
@@ -88,6 +112,7 @@ function App() {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} />
       <FilterNamePerson showAll={showAll} onFilterChange={handleFilterChange} />
 
       <h3>add a new</h3>
