@@ -37,10 +37,7 @@ function App() {
     // Verificar si el nombre ya existe
     const nameExist = persons.find((person) => person.name === newName);
 
-    const nameBookObjetc = {
-      name: newName,
-      number: newPhone,
-    };
+    const nameBookObjetc = {name: newName,number: newPhone};
 
     if (nameExist) {
       if (
@@ -54,10 +51,12 @@ function App() {
           ); //Actualizamos el estado de los Phone of the person
           setNewName("");
           setNewPhone("");
-          showNotification(`Added '${newName}'`, "success").catch((error) => {
-            showNotification(`Failed to added ${newName}`, "error");
+          showNotification(`Added '${newName}'`, "success");
+        })
+          .catch((error) => {
+            showNotification(`Failed to update ${newName}. It might have been deleted`, "error");
           });
-        });
+        ;
       }
       return; //Detener la ejecucion si ya existe
     }
@@ -99,7 +98,15 @@ function App() {
     if (window.confirm(`Do you really want to delete ${person.name}?`)) {
       noteService.remove(id).then(() => {
         setPersons(persons.filter((p) => p.id !== id));
-      });
+        showNotification(`Deleted ${person.name}`, "success")
+      })
+      .catch((error)=>{
+        console.error("Error deleting person:", error);
+        showNotification(
+          `Failed to delete ${person.name}. It might have already been removed.`,
+          "error"
+        );
+      })
     }
   };
   // Filtrar las personas basadas en el texto ingresado en el filtro

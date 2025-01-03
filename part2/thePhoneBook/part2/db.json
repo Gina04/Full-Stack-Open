@@ -16,49 +16,9 @@
       "id": "4"
     },
     {
-      "name": "gina",
-      "number": "1234",
-      "id": "160c"
-    },
-    {
-      "id": "3344",
       "name": "Paola",
-      "number": "345"
-    },
-    {
-      "id": "b089",
-      "name": "Alexader",
-      "number": "9090"
-    },
-    {
-      "id": "bbe2",
-      "name": "Eloisa",
-      "number": "888"
-    },
-    {
-      "id": "b571",
-      "name": "Leonor",
-      "number": "455"
-    },
-    {
-      "id": "53da",
-      "name": "Ana",
-      "number": "666"
-    },
-    {
-      "id": "0a60",
-      "name": "pepito",
-      "number": "222"
-    },
-    {
-      "id": "87b4",
-      "name": "Andrea",
-      "number": "123"
-    },
-    {
-      "id": "1192",
-      "name": "Adrian",
-      "number": "1234"
+      "number": "",
+      "id": "3344"
     }
   ]
 }
