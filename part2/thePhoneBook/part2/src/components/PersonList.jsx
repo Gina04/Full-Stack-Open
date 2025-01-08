@@ -1,6 +1,6 @@
 import Person from './Person'
 const PersonList = ({persons,handleDelete })=>{
-
+    console.log()
     return(
         <>
           <ul>

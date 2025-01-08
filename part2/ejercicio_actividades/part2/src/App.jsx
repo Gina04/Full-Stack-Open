@@ -6,6 +6,7 @@ import Notification from "./components/Notification";
 import Footer from "./components/Footer";
 
 
+
 function App(props) {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNotes] = useState("");
