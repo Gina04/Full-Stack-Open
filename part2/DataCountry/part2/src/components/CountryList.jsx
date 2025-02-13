@@ -1,24 +1,31 @@
 import CountryDetails from "./CountryDetails";
 
-const CountryList = ({countries}) =>{
-   
-    if(countries.length > 10){
-        return <p>Too many matches, specify another filter</p>;
-    }
+const CountryList = ({ filteredCountries,onShowDetails }) => {
+  if (filteredCountries.length > 10) {
+    return <p>Too many matches, specify another filter</p>;
+  }
 
-    if(countries.length ===1){
-        return <CountryDetails country = {countries[0]}/>
-    }
-    
-return(
-    <ul>
-        {countries.map(country =>{
-            <li key={country.cca3}>{country.name.common}</li>
-            
-        })} 
- 
-    </ul>
-)
-}
+  if (filteredCountries.length > 1) {
+    return (
+      <ul>
+        {filteredCountries.map((country, index) => (
+          <li 
+          key={index}>{country.name.common} 
+          <button onClick={() => onShowDetails(country)}>Show</button></li>
+        ))}
+
+        
+      </ul>
+
+
+    );
+  }
+
+  if (filteredCountries.length === 1) {
+    return <CountryDetails country={filteredCountries[0]} />;
+  }
+
+  return null; // Evita warnings si no hay países
+};
 
 export default CountryList;

@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import SearchInput  from './components/SearchInput';
+import CountryList from './components/CountryList';
+import CountryDetails from './components/CountryDetails'
+
+const apiKey = import.meta.env.VITE_SOME_KEY;  // Acceso a la clave API
 
 function App() {
   const [countries, setCountries] = useState([]);
   const [search, setSearch] = useState('');
-  const [filteredCountries, setFilteredCountries] = useState([]);
+  const [filteredCountries, setFilteredCountries] = useState([])
+  const [selectedCountry, setSelectedCountry] = useState(null)
+  const [weather, setWeather] = useState(null);  // Nuevo estado para el clima
 
   useEffect(() => {
     // Traemos la lista completa de países
@@ -29,42 +36,53 @@ function App() {
   }, [search, countries]);
 
   const handleSearchChange = (event) => {
-    setSearch(event.target.value);
+    setSearch(event.target.value)
+    const filtered = countries.filter((country) =>
+      country.name.common.toLowerCase().includes(event.target.value.toLowerCase())
+  )
+
+    setFilteredCountries(filtered)
+
+  };
+
+  const handleShowDetails = (country) => {
+    setSelectedCountry(country);
+
+    // Obtener los datos meteorológicos para la capital del país seleccionado
+    const capital = country.capital[0]
+
+    axios
+      .get(`https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=${apiKey}&units=metric`)
+      .then(response =>{
+         setWeather(response.data)
+      })
+      .catch(error => console.error('Error fetching weather data:', error))
+
   };
 
   return (
     <div>
-      <h1>Country Finder</h1>
-      <input
-        type="text"
-        value={search}
-        onChange={handleSearchChange}
-        placeholder="Search for a country"
-      />
-
-      <div>
-        {filteredCountries.length > 10 ? (
-          <p>Too many matches, please be more specific</p>
-        ) : filteredCountries.length > 1 ? (
-          <ul>
-            {filteredCountries.map((country, index) => (
-              <li key={index}>{country.name.common}</li>
-            ))}
-          </ul>
-        ) : filteredCountries.length === 1 ? (
-          <div>
-            <h2>{filteredCountries[0].name.common}</h2>
-            <p>Capital: {filteredCountries[0].capital}</p>
-            <p>Area: {filteredCountries[0].area}</p>
-            <p>Languages: {Object.values(filteredCountries[0].languages).join(', ')}</p>
-            <img
-              src={filteredCountries[0].flags.png}
-              alt={`Flag of ${filteredCountries[0].name.common}`}
-              width="100"
-            />
-          </div>
-        ) : null}
-      </div>
+      <SearchInput search={search} onSearchChange ={handleSearchChange}/>
+      <CountryList  
+      filteredCountries={filteredCountries} 
+      onShowDetails={handleShowDetails} />
+       {/* Mostrar detalles del país seleccionado */}
+       {selectedCountry && <CountryDetails country={selectedCountry} />}
+         {/* Mostrar información meteorológica */}
+         {
+          weather && (
+            <div>
+              <h3>Weather in {selectedCountry.capital[0]}</h3>
+              <p>Temperature: {weather.main.temp} °C</p>
+              <p>Weather: {weather.weather[0].description}</p>
+              <img
+                src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
+                alt={weather.weather[0].description}
+              />
+            </div>
+            )
+         }
+      
     </div>
   );
 }
